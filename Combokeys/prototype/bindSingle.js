@@ -53,7 +53,7 @@ module.exports = function (combination, callback, action, sequenceName, level) {
     callbacksArray.push(callbackDefinition);
 
     return function(){
-        index = callbacksArray.indexOf(callbackDefinition);
+        var index = callbacksArray.indexOf(callbackDefinition);
         callbacksArray.splice(index, 1);
     };
 };
