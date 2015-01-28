@@ -35,8 +35,14 @@ module.exports = function (character, modifiers, e, sequenceName, combination, l
 
     // loop through all callbacks for the key that was pressed
     // and see if any of them match
-    for (j = 0; j < self.callbacks[character].length; ++j) {
-        callback = self.callbacks[character][j];
+    var callbacks = self.callbacks[character].sequences.reverse().concat(self.callbacks[character].singles.reverse());
+
+    //stupid reverse function mutates array
+    self.callbacks[character].sequences.reverse();
+    self.callbacks[character].singles.reverse();
+
+    for (j = 0; j < callbacks.length; ++j) {
+        callback = callbacks[j];
 
         // if a sequence name is not specified, but this is a sequence at
         // the wrong level then move onto the next match
@@ -59,18 +65,6 @@ module.exports = function (character, modifiers, e, sequenceName, combination, l
         // firefox will fire a keypress if meta or control is down
         modifiersMatch = require("./modifiersMatch");
         if ((action === "keypress" && !e.metaKey && !e.ctrlKey) || modifiersMatch(modifiers, callback.modifiers)) {
-
-            // when you bind a combination or sequence a second time it
-            // should overwrite the first one.  if a sequenceName or
-            // combination is specified in this call it does just that
-            //
-            // @todo make deleting its own method?
-            var deleteCombo = !sequenceName && callback.combo === combination;
-            var deleteSequence = sequenceName && callback.seq === sequenceName && callback.level === level;
-            if (deleteCombo || deleteSequence) {
-                self.callbacks[character].splice(j, 1);
-            }
-
             matches.push(callback);
         }
     }
