@@ -12,12 +12,11 @@
  * @param {string|Array} keys
  * @param {Function} callback
  * @param {string=} action - "keypress", "keydown", or "keyup"
- * @returns void
+ * @returns {Function} unbind function
  */
 module.exports = function(keys, callback, action) {
     var self = this;
 
     keys = keys instanceof Array ? keys : [keys];
-    self.bindMultiple(keys, callback, action);
-    return self;
+    return self.bindMultiple(keys, callback, action);
 };

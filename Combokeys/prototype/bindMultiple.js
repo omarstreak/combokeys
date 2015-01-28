@@ -12,7 +12,14 @@
 module.exports = function (combinations, callback, action) {
     var self = this;
 
+    var unbinders = [];
     for (var j = 0; j < combinations.length; ++j) {
-        self.bindSingle(combinations[j], callback, action);
+        unbinders.push(self.bindSingle(combinations[j], callback, action));
     }
+
+    return function(){
+    	for(var ii=0; ii<unbinders.length; ii++){
+    		unbinders[ii]();
+    	}
+    };
 };

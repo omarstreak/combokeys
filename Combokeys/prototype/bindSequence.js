@@ -70,9 +70,17 @@ module.exports = function (combo, keys, callback, action) {
     // next key in the sequence should match.  this allows a sequence
     // to mix and match keypress and keydown events depending on which
     // ones are better suited to the key provided
+
+    var unbinders = [];
     for (var j = 0; j < keys.length; ++j) {
         var isFinal = j + 1 === keys.length;
         var wrappedCallback = isFinal ? callbackAndReset : increaseSequence(action || self.getKeyInfo(keys[j + 1]).action);
-        self.bindSingle(keys[j], wrappedCallback, action, combo, j);
+        unbinders.push(self.bindSingle(keys[j], wrappedCallback, action, combo, j));
     }
+
+    return function(){
+        for( var ii=0; ii<unbinders.length; ii++){
+            unbinders[ii]();
+        }
+    };
 };
