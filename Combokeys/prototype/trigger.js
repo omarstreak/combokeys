@@ -8,8 +8,5 @@
  * @returns void
  */
 module.exports = function(keys, action) {
-    if (directMap[keys + ":" + action]) {
-        directMap[keys + ":" + action]({}, keys);
-    }
-    return this;
+
 };
