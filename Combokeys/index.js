@@ -1,7 +1,7 @@
 /* eslint-env node, browser */
 "use strict";
 
-module.exports = function (element) {
+module.exports = function (element, useCapture) {
     var self = this,
         Combokeys = self.constructor;
 
@@ -58,7 +58,7 @@ module.exports = function (element) {
 
     self.element = element;
 
-    self.addEvents();
+    self.addEvents(useCapture);
 
     Combokeys.instances.push(self);
     return self;
