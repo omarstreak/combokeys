@@ -66,7 +66,6 @@ module.exports = function (element, useCapture) {
 
 module.exports.prototype.bind = require("./prototype/bind");
 module.exports.prototype.bindMultiple = require("./prototype/bindMultiple");
-module.exports.prototype.unbind = require("./prototype/unbind");
 module.exports.prototype.trigger = require("./prototype/trigger");
 module.exports.prototype.reset = require("./prototype/reset.js");
 module.exports.prototype.stopCallback = require("./prototype/stopCallback");
