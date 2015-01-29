@@ -13,7 +13,7 @@ module.exports = function (character, modifiers, e) {
     var self = this,
         callbacks,
         j,
-        doNotReset = {},
+        activeSequences = [],
         maxLevel = 0,
         processedSequenceCallback = false,
         isModifier,
@@ -52,8 +52,12 @@ module.exports = function (character, modifiers, e) {
             processedSequenceCallback = true;
 
             // keep a list of which sequences were matches for later
-            doNotReset[callbacks[j].seq] = 1;
-            self.fireCallback(callbacks[j].callback, e, callbacks[j].combo, callbacks[j].seq);
+            activeSequences.push(callbacks[j].originalCallback);
+            if(!self.fireCallback(callbacks[j].callback, e, callbacks[j].combo, callbacks[j].seq)){
+                //wrapped function to increment counter returns true
+                activeSequences = [];
+                break;
+            }
             continue;
         }
 
@@ -88,7 +92,7 @@ module.exports = function (character, modifiers, e) {
     ignoreThisKeypress = e.type === "keypress" && self.ignoreNextKeypress;
     isModifier = require("../../helpers/isModifier");
     if (e.type === self.nextExpectedAction && !isModifier(character) && !ignoreThisKeypress) {
-        self.resetSequences(doNotReset);
+        self.resetSequences(activeSequences);
     }
 
     self.ignoreNextKeypress = processedSequenceCallback && e.type === "keydown";

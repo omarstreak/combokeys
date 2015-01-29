@@ -11,7 +11,7 @@
  * @param {number=} level - what part of the sequence the command is
  * @returns void
  */
-module.exports = function (combination, callback, action, sequenceName, level) {
+module.exports = function (combination, callback, action, sequenceName, level, originalCallback) {
     var self = this;
 
     // make sure multiple spaces in a row become a single space
@@ -42,6 +42,7 @@ module.exports = function (combination, callback, action, sequenceName, level) {
     var callbacksArray = self.callbacks[info.key][sequenceName ? 'sequences' : 'singles'];
     var callbackDefinition = {
         callback: callback,
+        originalCallback: originalCallback || callback,
         modifiers: info.modifiers,
         action: info.action,
         seq: sequenceName,

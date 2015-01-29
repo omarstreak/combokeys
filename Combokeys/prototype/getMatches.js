@@ -35,24 +35,24 @@ module.exports = function (character, modifiers, e, sequenceName, combination, l
 
     // loop through all callbacks for the key that was pressed
     // and see if any of them match
-    var callbacks = self.callbacks[character].sequences.reverse().concat(self.callbacks[character].singles.reverse());
+    var callbackDefinitions = self.callbacks[character].sequences.reverse().concat(self.callbacks[character].singles.reverse());
 
     //stupid reverse function mutates array
     self.callbacks[character].sequences.reverse();
     self.callbacks[character].singles.reverse();
 
-    for (j = 0; j < callbacks.length; ++j) {
-        callback = callbacks[j];
+    for (j = 0; j < callbackDefinitions.length; ++j) {
+        var callbackDefinition = callbackDefinitions[j];
 
         // if a sequence name is not specified, but this is a sequence at
         // the wrong level then move onto the next match
-        if (!sequenceName && callback.seq && self.sequenceLevels[callback.seq] !== callback.level) {
+        if (!sequenceName && callbackDefinition.seq && callbackDefinition.originalCallback.currentLevel !== callbackDefinition.level) {
             continue;
         }
 
         // if the action we are looking for doesn't match the action we got
         // then we should keep going
-        if (action !== callback.action) {
+        if (action !== callbackDefinition.action) {
             continue;
         }
 
@@ -64,8 +64,8 @@ module.exports = function (character, modifiers, e, sequenceName, combination, l
         // safari will fire a keypress if meta or meta+shift is down
         // firefox will fire a keypress if meta or control is down
         modifiersMatch = require("./modifiersMatch");
-        if ((action === "keypress" && !e.metaKey && !e.ctrlKey) || modifiersMatch(modifiers, callback.modifiers)) {
-            matches.push(callback);
+        if ((action === "keypress" && !e.metaKey && !e.ctrlKey) || modifiersMatch(modifiers, callbackDefinition.modifiers)) {
+            matches.push(callbackDefinition);
         }
     }
 

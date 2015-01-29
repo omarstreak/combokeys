@@ -15,7 +15,7 @@ module.exports = function (combo, keys, callback, action) {
 
     // start off by adding a sequence level record for this combination
     // and setting the level to 0
-    self.sequenceLevels[combo] = 0;
+    callback.currentLevel = 0;
 
     /**
      * callback to increase the sequence level for this sequence and reset
@@ -27,8 +27,10 @@ module.exports = function (combo, keys, callback, action) {
     function increaseSequence(nextAction) {
         return function() {
             self.nextExpectedAction = nextAction;
-            ++self.sequenceLevels[combo];
+            ++callback.currentLevel;
             self.resetSequenceTimer();
+
+            return true;
         };
     }
 
@@ -75,7 +77,7 @@ module.exports = function (combo, keys, callback, action) {
     for (var j = 0; j < keys.length; ++j) {
         var isFinal = j + 1 === keys.length;
         var wrappedCallback = isFinal ? callbackAndReset : increaseSequence(action || self.getKeyInfo(keys[j + 1]).action);
-        unbinders.push(self.bindSingle(keys[j], wrappedCallback, action, combo, j));
+        unbinders.push(self.bindSingle(keys[j], wrappedCallback, action, combo, j, callback));
     }
 
     return function(){

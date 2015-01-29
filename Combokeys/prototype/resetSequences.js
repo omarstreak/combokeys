@@ -7,23 +7,17 @@
  * @param {Object} doNotReset
  * @returns void
  */
-module.exports = function (doNotReset) {
-    var self = this;
+module.exports = function (activeSequences) {
+    activeSequences = activeSequences || [];
 
-    doNotReset = doNotReset || {};
-
-    var activeSequences = false,
-        key;
-
-    for (key in self.sequenceLevels) {
-        if (doNotReset[key]) {
-            activeSequences = true;
-            continue;
+    for(var key in this.callbacks){
+        var callbackDefinitions = this.callbacks[key].sequences;
+        for(var ii=0; ii<callbackDefinitions.length; ii++){
+            if(activeSequences.indexOf(callbackDefinitions[ii].originalCallback) === -1){
+                callbackDefinitions[ii].originalCallback.currentLevel = 0;
+            }
         }
-        self.sequenceLevels[key] = 0;
     }
 
-    if (!activeSequences) {
-        self.nextExpectedAction = false;
-    }
+    this.nextExpectedAction = activeSequences.length > 0;
 };

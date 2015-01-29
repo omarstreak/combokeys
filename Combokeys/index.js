@@ -13,19 +13,11 @@ module.exports = function (element, useCapture) {
     self.callbacks = {};
 
     /**
-     * direct map of string combinations to callbacks used for trigger()
+     * keeps track of active sequences
      *
-     * @type {Object}
+     * @type {Array}
      */
-    self.directMap = {};
-
-    /**
-     * keeps track of what level each sequence is at since multiple
-     * sequences can start out with the same sequence
-     *
-     * @type {Object}
-     */
-    self.sequenceLevels = {};
+    self.activeSequences = [];
 
     /**
      * variable to store the setTimeout call
