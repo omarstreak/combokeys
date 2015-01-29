@@ -18,13 +18,16 @@ module.exports = function (callback, e, combo, sequence) {
 
     // if this event should not happen stop here
     if (self.stopCallback(e, e.target || e.srcElement, combo, sequence)) {
-        return;
+        return true;
     }
 
-    if (callback(e, combo) === false) {
+    var callbackReturnValue = callback(e, combo);
+    if (callbackReturnValue === false) {
         preventDefault = require("../../helpers/preventDefault");
         preventDefault(e);
         stopPropagation = require("../../helpers/stopPropagation");
         stopPropagation(e);
     }
+
+    return callbackReturnValue;
 };
